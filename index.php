@@ -1,6 +1,7 @@
 <?php
 require_once("./vendor/autoload.php");
-use App\Routes\Router;
+
+use App\Router\Router;
 
 $url = $_SERVER['REQUEST_URI'];
 $controller = new Router();
