@@ -16,12 +16,11 @@ class Router
         $path = parse_url($url, PHP_URL_PATH);
         $pieces = explode("/", $path);
         
-        // Получаем ресурс (например, 'about' или пустую строку для главной)
+        // Получаем ресурс (например, 'about', 'products', 'product' или пустую строку для главной)
         $resource = $pieces[1] ?? '';
 
         switch ($resource) {
             case "about":
-                // Теперь класс должен найтись, так как файл подключен выше
                 $controller = new AboutController();
                 return $controller->get();
             
@@ -30,13 +29,21 @@ class Router
                 $controller = new HomeController();
                 return $controller->get();
 
+            // 👇 Каталог товаров (список) - маршрут /products
+            case "products":
+                $productController = new ProductController();
+                return $productController->get(null); // null = показать все товары
+                
+            // 👇 Карточка товара - маршрут /product/{id}
             case "product":
-                $product = new ProductController();
-                $id = isset($pieces[2]) ? intval($pieces[2]) : 0;
-                return $product->get($id);
+                $productController = new ProductController();
+                $id = isset($pieces[2]) ? intval($pieces[2]) : null;
+                return $productController->get($id);
                 
             default:
-                break;
+                // Страница 404 или редирект на главную
+                $controller = new HomeController();
+                return $controller->get();
         }
     }
 }

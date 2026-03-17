@@ -9,17 +9,23 @@ use App\Views\ProductTemplate;
 
 class ProductController
 {
-    public function get($id): string 
-    {
-        $model = new Product();
-        $data = $model->loadData(); // Теперь вернет массив [1 => [...], 2 => [...]]
-        
-        // Проверяем, существует ли такой ключ
-        if ($data && isset($data[$id])) {
-            $productData = $data[$id];
-            return \App\Views\ProductTemplate::getCardTemplate($productData);
-        }
-        
-        return '<div class="alert alert-danger">Товар с ID ' . $id . ' не найден</div>';
+    public function get(?int $id = null): string {
+    $model = new Product();
+    $data = $model->loadData();
+    
+    //  Если ID не задан — показываем каталог
+    if (!isset($id) || $id === null) {
+        return ProductTemplate::getAllTemplate($data);
     }
+    
+    //  Если ID задан — показываем карточку товара
+    $product = null;
+    foreach ($data as $item) {
+        if ($item['id'] == $id) {
+            $product = $item;
+            break;
+        }
+    }
+    return ProductTemplate::getCardTemplate($product);
+}
 }  

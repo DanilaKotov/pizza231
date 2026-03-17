@@ -7,7 +7,7 @@ class BaseTemplate
     {
         return <<<HTML
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +22,7 @@ class BaseTemplate
     <!-- Иконки (опционально) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <!-- Навигация (Меню) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
@@ -36,10 +36,11 @@ class BaseTemplate
                         <a class="nav-link active" href="/">Главная</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about">О нас</a>
+                        <a class="nav-link" href="/about">О нас</a>
                     </li>
+                    <!-- 👇 Исправлено: было "#" → стало "/products" -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Контакты</a>
+                        <a class="nav-link" href="/products">Каталог</a>
                     </li>
                 </ul>
             </div>
@@ -47,12 +48,12 @@ class BaseTemplate
     </nav>
 
     <!-- Основной контент -->
-    <main class="py-4">
+    <main class="flex-grow-1 py-4">
         $content
     </main>
 
     <!-- Подвал (Footer) -->
-    <footer class="bg-dark text-white text-center py-3 mt-5">
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
             <p class="mb-0">&copy; 2026 Кемеровский кооперативный техникум. Все права защищены.</p>
             <small>Разработано студентом группы ИС-231</small>

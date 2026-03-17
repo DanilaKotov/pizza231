@@ -24,8 +24,7 @@ class HomeTemplate extends BaseTemplate
             <div class="container">
                 <h1 class="display-4 fw-bold">Добро пожаловать в компьютерный магазин "пиксель"</h1>
                 <p class="lead">любые комплектующие наличии и под заказ.</p>
-                <a href="/catalog" class="btn btn-light btn-lg mt-3">Каталог</a>
-            </div>
+                <a href="/products" class="btn btn-light text-dark  btn-lg mt-3">Каталог</a>            </div>
         </div>
 
         <div class="container">
@@ -79,7 +78,7 @@ class HomeTemplate extends BaseTemplate
                          class="card-img-top" 
                          alt="' . $name . '"
                          style="height: 200px; object-fit: cover;"
-                         onerror="this.src=\'https://via.placeholder.com/300x200?text=Нет+фото\';">
+                         onerror="this.src=\'https://via.placeholder.com/300x200?text  =Нет+фото\';">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">' . $name . '</h5>
                         <p class="card-text text-muted small flex-grow-1">' . $description . '</p>
