@@ -2,35 +2,35 @@
   {
     "id": 1,
     "name": "Механическая клавиатура HyperX Alloy FPS",
-    "image": "keyboard1.png",
+    "image": "/assets/images/keyboard1.png",
     "description": "Профессиональная механическая клавиатура...",
     "price": 8990
   },
   {
     "id": 2,
     "name": "Игровая мышь Logitech G502 HERO",
-    "image": "mouse1.png",
+    "image": "/assets/images/mouse1.png",
     "description": "Высокоточная игровая мышь...",
     "price": 5490
   },
   {
     "id": 3,
     "name": "Монитор ASUS TUF Gaming VG27AQ",
-    "image": "monitor1.png",
+    "image": "/assets/images/monitor1.png",
     "description": "27-дюймовый игровой монитор...",
     "price": 32990
   },
   {
     "id": 4,
     "name": "Гарнитура SteelSeries Arctis 7",
-    "image": "headset1.png",
+    "image": "/assets/images/headset1.png",
     "description": "Беспроводная игровая гарнитура...",
     "price": 12490
   },
   {
     "id": 5,
     "name": "Веб-камера Logitech C920 HD Pro",
-    "image": "webcam1.png",
+    "image": "/assets/images/webcam1.png",
     "description": "Full HD веб-камера с автофокусом...",
     "price": 6790
   }

@@ -1,7 +1,10 @@
 <?php
 namespace App\Controllers;
 
-use App\Models\Product;
+require_once __DIR__ . '/../Models/Product.php';
+require_once __DIR__ . '/../Views/ProductTemplate.php';
+
+use App\Models\Product; 
 use App\Views\ProductTemplate;
 
 class ProductController
@@ -9,16 +12,14 @@ class ProductController
     public function get($id): string 
     {
         $model = new Product();
-        $products = $model->loadData();
+        $data = $model->loadData(); // Теперь вернет массив [1 => [...], 2 => [...]]
         
-        // Ищем товар по id, а не по индексу массива
-        foreach ($products as $product) {
-            if ($product['id'] == $id) {
-                return ProductTemplate::getCardTemplate($product);
-            }
+        // Проверяем, существует ли такой ключ
+        if ($data && isset($data[$id])) {
+            $productData = $data[$id];
+            return \App\Views\ProductTemplate::getCardTemplate($productData);
         }
         
-        // Товар не найден
-        return ProductTemplate::getCardTemplate(null);
+        return '<div class="alert alert-danger">Товар с ID ' . $id . ' не найден</div>';
     }
-}
+}  

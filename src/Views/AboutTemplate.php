@@ -1,41 +1,63 @@
 <?php
 namespace App\Views;
 
-class AboutTemplate extends BaseTemplate 
-{
-    public static function getTemplate(): string 
-    {
-        $template = parent::getTemplate();
-        $title = 'О нас — Магазин Пиксель';
-        
-        $content = <<<HTML
-        <div class="container my-5">
-            <div class="row mb-5 text-center">
-                <div class="col-lg mx-auto">
-                    <h1 class="display-5 fw-bold mb-3">Месторасположение <span class="text-primary">«Пиксель»</span></h1>
-                    <p class="lead text-muted">Мы ждём вас в нашем магазине!</p>
-                </div>
-            </div>
+use App\Views\BaseTemplate;
 
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="card border-0 shadow-lg">
-                        <img src="../../assets/images/karta.jpg" class="card-img-top" alt="Карта расположения магазина Пиксель" style="height: 450px; object-fit: cover;">
-                        <div class="card-body bg-light">
-                            <p class="card-text text-center text-muted small mb-0">
-                                📍 г. Кемерово, территория Кузбасского кооперативного техникума
-                            </p>
-                            <p class="card-text text-center mt-2">
-                                <strong>Режим работы:</strong> Пн-Пт: 9:00–18:00, Сб: 10:00–15:00
-                            </p>
+class AboutTemplate extends BaseTemplate
+{
+    public static function getTemplate(string $content = ''): string
+    {
+        $ourContent = '
+        <div class="container mt-4">
+            <h1 class="text-center mb-4">О нашем техникуме</h1>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="lead">
+                        Кемеровский кооперативный техникум сегодня – это первый шаг на пути к будущей успешной карьере.
+                    </p>
+                    
+                    <p>
+                        Техникум был основан в <strong>1974 году</strong> в связи с потребностью в специалистах 
+                        для предприятий и организаций потребительской кооперации Кемеровской области. 
+                        И сегодня мы готовим специалистов по самым престижным и востребованным специальностям.
+                    </p>
+                    
+                    <p>
+                        Более чем за 48 лет успешной работы техникум подготовил свыше 
+                        <strong>12 тысяч специалистов</strong> для различных предприятий и организаций.
+                    </p>
+                    
+                    <p>
+                        Подготовку будущих квалифицированных специалистов осуществляет 
+                        высокопрофессиональный коллектив преподавателей. Все специальности имеют 
+                        государственную аккредитацию, а выпускники получают диплом установленного образца.
+                    </p>
+                    
+                    <h4 class="mt-4">Контакты</h4>
+                    <ul class="list-unstyled">
+                        <li>📍 Адрес: 650070, г. Кемерово, ул. Тухачевского, 32</li>
+                        <li>📞 Телефон: +7 (3842) 21-56-61</li>
+                        <li>✉️ E-mail: info@coopteh.ru</li>
+                        <li>👩‍💼 Директор: Теребова Наталья Владимировна</li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-4">
+                    <!-- Карта Яндекс -->
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <script type="text/javascript" charset="utf-8" 
+                                    async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3AYOUR_CONSTRUCTOR_ID&amp;width=100%25&amp;height=300&amp;lang=ru_RU&amp;scroll=true">
+                            </script>
+                            <!-- Замените YOUR_CONSTRUCTOR_ID на ID вашей карты из Конструктора Яндекс.Карт -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        HTML;
-
-        $resultTemplate = sprintf($template, $title, $content);
-        return $resultTemplate;
+        ';
+        
+        return parent::getTemplate($ourContent);
     }
 }

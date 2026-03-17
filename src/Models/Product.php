@@ -1,21 +1,33 @@
 <?php
 namespace App\Models;
 
+require_once __DIR__ . '/../Configs/Config.php';
+
 use App\Configs\Config;
 
 class Product
 {
     public function loadData(): ?array
     {
-        $file = fopen(Config::FILE_PRODUCTS, 'r');
-        if (!$file) {
+        if (!file_exists(Config::FILE_PRODUCTS)) {
             return null;
         }
-        
-        $data = fread($file, filesize(Config::FILE_PRODUCTS));
-        fclose($file);
-        
+
+        $data = file_get_contents(Config::FILE_PRODUCTS);
         $arr = json_decode($data, true);
-        return $arr;
+
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($arr)) {
+            return null;
+        }
+
+        // ПРЕОБРАЗУЕМ МАССИВ: делаем ключом значение поля 'id'
+        $indexedData = [];
+        foreach ($arr as $item) {
+            if (isset($item['id'])) {
+                $indexedData[$item['id']] = $item;
+            }
+        }
+
+        return $indexedData;
     }
 }

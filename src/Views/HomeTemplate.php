@@ -1,76 +1,98 @@
 <?php
 namespace App\Views;
 
+require_once __DIR__ . '/BaseTemplate.php';
+require_once __DIR__ . '/../Models/Product.php'; // Подключаем модель
+
+use App\Models\Product;
+
 class HomeTemplate extends BaseTemplate
 {
-    public static function getTemplate()
+    public static function getTemplate(string $content = ''): string 
     {
-        $template = parent::getTemplate(); 
-        $title = 'Главная страница';
-        $content = <<<HTML
-                <section>        
-            <div class="h-50 w-50 mx-auto">          
-                <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner" style="height:80vh;">
-                        <div class="carousel-item active">
-                        <img src="/../../assets/images/img1.png" class="d-block w-100 h-100" alt="...">
-                        </div>
-                        <div class="carousel-item">
-                        <img src="/../../assets/images/img2.png" class="d-block w-100 h-100" alt="...">
-                        </div>
-                        <div class="carousel-item">
-                        <img src="/../../assets/images/img3.png" class="d-block w-100 h-100" alt="...">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>        
-            </div>
-            </section>
-            <main class="container">
-                <div class="row align-items-center justify-content-center">
-                    <div class="col-lg-8 text-center">
-                        
-                        <h1 class="display-4 fw-bold text-dark mb-3">
-                            Добро пожаловать в <span class="text-primary">«Пиксель»</span>
-                        </h1>
-                        
-                        <p class="lead text-secondary mb-4">
-                            Твой надежный проводник в мир цифровых технологий. 
-                            Мы собираем мечты в реальность, предлагая лучшие комплектующие по городу.
-                        </p>
+        // 👇 Загружаем продукты через модель
+        $productModel = new Product();
+        $products = $productModel->loadData() ?? [];
+        
+        // 👇 Генерируем HTML для карточек товаров
+        $productsHtml = self::renderProducts($products);
 
-                        <div class="row g-4 mb-5">
-                            <div class="col-md-4">
-                                <div class="p-3 border rounded bg-light h-100">
-                                    <h5 class="fw-bold">🚀 Быстро</h5>
-                                    <p class="small text-muted">Оперативная обработка заказа и доставка по Кемерово в день обращения.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 border rounded bg-light h-100">
-                                    <h5 class="fw-bold">💎 Качественно</h5>
-                                    <p class="small text-muted">Только оригинальная продукция от ведущих мировых брендов.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 border rounded bg-light h-100">
-                                    <h5 class="fw-bold">💰 Выгодно</h5>
-                                    <p class="small text-muted">Честные цены без скрытых наценок и регулярные акции.</p>
-                                </div>
-                            </div>
-                        </footer>
+        // Формируем основной контент
+        $ourContent = '
+        <!-- Герой-блок (Баннер) -->
+        <div class="hero-section text-center">
+            <div class="container">
+                <h1 class="display-4 fw-bold">Добро пожаловать в компьютерный магазин "пиксель"</h1>
+                <p class="lead">любые комплектующие наличии и под заказ.</p>
+                <a href="/catalog" class="btn btn-light btn-lg mt-3">Каталог</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-md-6">
+                    <h2 class="mb-3">Почему выбирают нас?</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-transparent"><i class="bi bi-check-circle-fill text-success"></i> Оригинальные комплектующие</li>
+                        <li class="list-group-item bg-transparent"><i class="bi bi-check-circle-fill text-success"></i> Наличие большого количества товара</li>
+                        <li class="list-group-item bg-transparent"><i class="bi bi-check-circle-fill text-success"></i> Доступные цены</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 👇 Секция с товарами -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="text-center mb-4">Популярные товары</h2>
+                    ' . $productsHtml . '
+                </div>
+            </div>
+        </div>
+        ';
+        
+        return parent::getTemplate($ourContent);
+    }
+    
+    /**
+     * Рендерит карточки товаров
+     */
+    private static function renderProducts(array $products): string
+    {
+        if (empty($products)) {
+            return '<p class="text-center text-muted">Товары временно отсутствуют</p>';
+        }
+
+        $html = '<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">';
+        
+        foreach ($products as $product) {
+            // Экранируем вывод для безопасности
+            $name = htmlspecialchars($product['name'] ?? 'Без названия');
+            $description = htmlspecialchars($product['description'] ?? '');
+            $price = number_format($product['price'] ?? 0, 0, '.', ' ');
+            $image = htmlspecialchars($product['image'] ?? '/assets/img/no-image.jpg');
+            $id = (int)($product['id'] ?? 0);
+            
+            $html .= '
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="' . $image . '" 
+                         class="card-img-top" 
+                         alt="' . $name . '"
+                         style="height: 200px; object-fit: cover;"
+                         onerror="this.src=\'https://via.placeholder.com/300x200?text=Нет+фото\';">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">' . $name . '</h5>
+                        <p class="card-text text-muted small flex-grow-1">' . $description . '</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 mb-0 text-primary">' . $price . ' ₽</span>
+                            <a href="/product/' . $id . '" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                        </div>
                     </div>
                 </div>
-            </main> 
-        HTML;
-        $resultTemplate = sprintf($template, $title, $content);
-        return $resultTemplate;
+            </div>';
+        }
+        
+        $html .= '</div>';
+        return $html;
     }
 }
