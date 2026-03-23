@@ -4,10 +4,12 @@ namespace App\Router;
 require_once __DIR__ . '/../Controllers/HomeController.php';
 require_once __DIR__ . '/../Controllers/AboutController.php';
 require_once __DIR__ . '/../Controllers/ProductController.php';
+require_once __DIR__ . '/../Controllers/BasketController.php'; // 👈
 
 use App\Controllers\HomeController;
 use App\Controllers\AboutController;
 use App\Controllers\ProductController;
+use App\Controllers\BasketController; // 👈
 
 class Router
 {
@@ -15,8 +17,6 @@ class Router
     {
         $path = parse_url($url, PHP_URL_PATH);
         $pieces = explode("/", $path);
-        
-        // Получаем ресурс (например, 'about', 'products', 'product' или пустую строку для главной)
         $resource = $pieces[1] ?? '';
 
         switch ($resource) {
@@ -29,19 +29,30 @@ class Router
                 $controller = new HomeController();
                 return $controller->get();
 
-            // 👇 Каталог товаров (список) - маршрут /products
             case "products":
                 $productController = new ProductController();
-                return $productController->get(null); // null = показать все товары
+                return $productController->get(null);
                 
-            // 👇 Карточка товара - маршрут /product/{id}
             case "product":
                 $productController = new ProductController();
                 $id = isset($pieces[2]) ? intval($pieces[2]) : null;
                 return $productController->get($id);
+            
+            case "basket":
+                $basketController = new BasketController();
+                $basketController->add();
+                $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
+                header("Location: {$prevUrl}");
+                exit();
+
+            case "basket-clear":
+                $basketController = new BasketController();
+                $basketController->clear();
+                $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
+                header("Location: {$prevUrl}");
+                exit();
                 
             default:
-                // Страница 404 или редирект на главную
                 $controller = new HomeController();
                 return $controller->get();
         }

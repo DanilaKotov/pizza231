@@ -35,6 +35,11 @@ class ProductTemplate extends BaseTemplate
                             <h4 class="text-primary fw-bold mb-0 me-3">{$price} ₽</h4>
                             <a href="/product/{$id}" class="btn btn-outline-primary btn-sm">Подробнее</a>
                         </div>
+                        <!-- Форма добавления в корзину -->
+                        <form action="/basket" method="POST" class="mt-2">
+                            <input type="hidden" name="id" value="{$id}">
+                            <button type="submit" class="btn btn-primary btn-sm">Добавить в корзину</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -99,13 +104,18 @@ class ProductTemplate extends BaseTemplate
                                             <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">В наличии</span>
                                         </div>
                                         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                                            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold shadow-sm">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart-plus me-2" viewBox="0 0 16 16">
-                                                    <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
-                                                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                                </svg>
-                                                В корзину
-                                            </button>
+                                            <!-- Форма добавления в корзину -->
+                                            <form action="/basket" method="POST" class="d-inline">
+                                                <input type="hidden" name="id" value="' . (int)$data['id'] . '">
+                                                <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold shadow-sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" 
+                                                         class="bi bi-cart-plus me-2" viewBox="0 0 16 16">
+                                                        <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
+                                                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                                    </svg>
+                                                    В корзину
+                                                </button>
+                                            </form>
                                             <a href="/" class="btn btn-outline-secondary btn-lg px-4">На главную</a>
                                         </div>
                                     </div>
