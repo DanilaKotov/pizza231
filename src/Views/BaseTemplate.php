@@ -5,48 +5,59 @@ class BaseTemplate
 {
     public static function getTemplate(string $content): string
     {
-        return <<<HTML
-<!DOCTYPE html>
-<html lang="ru" style="height: 100%;">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Компьютерный магазин</title>
-    
-    <!-- 1. Подключаем Bootstrap 5 (Стили) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- 2. Подключаем ваши личные стили -->
-    <link rel="stylesheet" href="/assets/css/style.css">
-    
-    <!-- Иконки (опционально) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-</head>
-<body class="d-flex flex-column min-vh-100">
+        $html = <<<HTML
+    <!DOCTYPE html>
+    <html lang="ru" style="height: 100%;">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Компьютерный магазин</title>
+        
+        <!-- 1. Подключаем Bootstrap 5 (Стили) -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- 2. Подключаем ваши личные стили -->
+        <link rel="stylesheet" href="/assets/css/style.css">
+        
+        <!-- Иконки (опционально) -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    </head>
+    <body class="d-flex flex-column min-vh-100">
 
-    <!-- Навигация (Меню) -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container"> 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/">Главная</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">О нас</a>
-                    </li>
-                    <!-- 👇 Исправлено: было "#" → стало "/products" -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/products">Каталог</a>
-                    </li>
-                </ul>
+        <!-- Навигация (Меню) -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container"> 
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/about">О нас</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/products">Каталог</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-
+        </nav>
+    HTML;
+     session_start();
+        if (isset($_SESSION['flash'])) {
+            $html .= <<<END
+                <div id="liveAlertBtn" class="alert alert-dark alert-dismissible" role="alert">
+                    <div>{$_SESSION['flash']}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                    onclick="this.parentNode.style.display='none';"></button>
+                </div>
+            END;
+            unset($_SESSION['flash']);
+        }
+        $html .= <<<HTML
     <!-- Основной контент -->
     <main class="flex-grow-1 py-4">
         $content
@@ -65,5 +76,6 @@ class BaseTemplate
 </body>
 </html>
 HTML;
+return $html;
     }
 }

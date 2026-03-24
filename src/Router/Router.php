@@ -43,14 +43,14 @@ class Router
                 $basketController->add();
                 $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
                 header("Location: {$prevUrl}");
-                exit();
+                return "";
 
             case "basket-clear":
                 $basketController = new BasketController();
                 $basketController->clear();
                 $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
                 header("Location: {$prevUrl}");
-                exit();
+                return "";
                 
             default:
                 $controller = new HomeController();

@@ -29,12 +29,16 @@ class BasketController
                     // 👇 Позже можно добавить: 'name', 'price', 'image' для отображения
                 ];
             }
-        
-        var_dump($_SESSION);
-        exit();
-            // 👇 Опционально: флеш-сообщение
-            // $_SESSION['flash'] = "Товар добавлен в корзину!";
+            
+            // 👇 Флеш-сообщение (НОВОЕ)
+            $_SESSION['flash'] = "Товар успешно добавлен в корзину!";
+            $_SESSION['flash_type'] = "success";
         }
+        
+        // 👇 Редирект назад (НОВОЕ - вместо var_dump/exit)
+        $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
+        header("Location: {$prevUrl}");
+        exit();
     }
     
     /**
@@ -46,6 +50,14 @@ class BasketController
             session_start();
         }
         $_SESSION['basket'] = [];
-        // Опционально: $_SESSION['flash'] = "Корзина очищена";
+        
+        // 👇 Флеш-сообщение (НОВОЕ)
+        $_SESSION['flash'] = "Корзина очищена!";
+        $_SESSION['flash_type'] = "warning";
+        
+        // 👇 Редирект (НОВОЕ)
+        $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
+        header("Location: {$prevUrl}");
+        exit();
     }
 }
