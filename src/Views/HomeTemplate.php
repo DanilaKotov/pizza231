@@ -2,27 +2,44 @@
 namespace App\Views;
 
 require_once __DIR__ . '/BaseTemplate.php';
-require_once __DIR__ . '/../Models/Product.php'; // Подключаем модель
+require_once __DIR__ . '/../Models/Product.php';
+
+// 👇 НОВОЕ: Подключения конфига и сервисов
+require_once __DIR__ . '/../Configs/Config.php';
+require_once __DIR__ . '/../Services/IStorage.php';
+require_once __DIR__ . '/../Services/FileStorage.php';
+require_once __DIR__ . '/../Services/DatabaseStorage.php';
 
 use App\Models\Product;
+use App\Configs\Config;
 
 class HomeTemplate extends BaseTemplate
 {
     public static function getTemplate(string $content = ''): string 
     {
-        // 👇 Загружаем продукты через модель
-        $productModel = new Product();
+        // 👇 ИЗМЕНЕНО: Загружаем продукты через модель с внедрением зависимости
+        if (Config::STORAGE_TYPE == Config::TYPE_FILE) {
+            $serviceStorage = new \App\Services\FileStorage();
+            $productModel = new Product($serviceStorage, Config::FILE_PRODUCTS);
+        } else {
+            $serviceStorage = new \App\Services\DatabaseStorage();
+            $productModel = new Product($serviceStorage, Config::FILE_PRODUCTS);
+        }
+        
         $products = $productModel->loadData() ?? [];
         
         // 👇 Генерируем HTML для карточек товаров
         $productsHtml = self::renderProducts($products);
 
-        // Формируем основной контент
+        // Формируем основной контент — ВИЗУАЛ БЕЗ ИЗМЕНЕНИЙ
         $ourContent = '
         <!-- Герой-блок (Баннер) -->
         <div class="hero-section text-center">
             <div class="container">
-                <h1 class="display-4 fw-bold">Добро пожаловать в компьютерный магазин "пиксель"</h1>
+                <h1 class="display-4 fw-bold">
+                    Добро пожаловать в компьютерный магазин<br>
+                    <span class="text-accent">"Пиксель"</span>
+                </h1>
                 <p class="lead">любые комплектующие наличии и под заказ.</p>
                 <a href="/products" class="btn btn-light text-dark  btn-lg mt-3">Каталог</a>            </div>
         </div>
@@ -42,7 +59,7 @@ class HomeTemplate extends BaseTemplate
             <!-- 👇 Секция с товарами -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <h2 class="text-center mb-4">Популярные товары</h2>
+                    <h2 class="text-center mb-4">🔥 Популярные товары</h2>
                     ' . $productsHtml . '
                 </div>
             </div>
@@ -78,7 +95,7 @@ class HomeTemplate extends BaseTemplate
                          class="card-img-top" 
                          alt="' . $name . '"
                          style="height: 200px; object-fit: cover;"
-                         onerror="this.src=\'https://via.placeholder.com/300x200?text  =Нет+фото\';">
+                         onerror="this.src=\'https://via.placeholder.com/300x200?text=Нет+фото\';">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">' . $name . '</h5>
                         <p class="card-text text-muted small flex-grow-1">' . $description . '</p>

@@ -1,24 +1,56 @@
 /* ========================================
-   🎯 CSS VARIABLES
+   🎯 CSS VARIABLES — ТЁМНАЯ ТЕМА
    ======================================== */
 :root {
+    /* Цвета текста */
     --text-white: #ffffff;
-    --text-bright: #f5f5f5;
-    --text-muted: rgba(255,255,255,0.7);
-    --glass: rgba(255,255,255,0.12);
-    --glass-border: rgba(255,255,255,0.2);
-    --glass-highlight: rgba(255,255,255,0.35);
+    --text-bright: #f0f0f0;
+    --text-muted: rgba(255, 255, 255, 0.7);
+    --text-disabled: rgba(255, 255, 255, 0.4);
+    
+    /* Фон и стекло */
+    --glass: rgba(45, 45, 60, 0.85);
+    --glass-light: rgba(55, 55, 70, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-highlight: rgba(255, 255, 255, 0.25);
+    
+    /* Акценты */
     --accent: #ffc107;
+    --accent-hover: #ffca2c;
     --accent-green: #2ecc71;
-    --shadow: 0 8px 24px rgba(0,0,0,0.4);
-    --shadow-lg: 0 16px 40px rgba(0,0,0,0.55);
+    --accent-blue: #667eea;
+    --accent-purple: #764ba2;
+    --accent-danger: #dc3545;
+    
+    /* Градиенты */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-success: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    --gradient-warning: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    --gradient-danger: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    
+    /* Тени */
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.4);
+    
+    /* Анимации */
     --transition-fast: 150ms ease;
     --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
+    
+    /* Скроллбар */
+    --scrollbar-bg: rgba(255, 255, 255, 0.1);
+    --scrollbar-thumb: #667eea;
+    --scrollbar-thumb-hover: #764ba2;
 }
 
 /* ========================================
-   🌑 БАЗОВЫЕ СТИЛИ И ФОН
+   🌑 БАЗОВЫЕ СТИЛИ
    ======================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -32,6 +64,17 @@ body {
     background: transparent;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Скрытие прокрутки для видео-фона */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 15, 25, 0.92) 0%, rgba(20, 20, 35, 0.88) 100%);
+    z-index: -1;
+    pointer-events: none;
 }
 
 /* Видео-фон */
@@ -46,32 +89,70 @@ body {
     object-fit: cover;
     transform: translate(-50%, -50%) scale(1.05);
     z-index: -2;
-    filter: blur(4px);
+    filter: blur(3px) brightness(0.7);
     will-change: transform;
     pointer-events: none;
 }
 
-/* Затемнение фона */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 100%);
-    z-index: -1;
-    pointer-events: none;
+/* ========================================
+   📝 ТИПОГРАФИКА
+   ======================================== */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-white) !important;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.75em;
+    line-height: 1.3;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p, span, li, label, small {
+    color: var(--text-bright);
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+    opacity: 1 !important;
+}
+
+.text-white {
+    color: var(--text-white) !important;
+}
+
+a {
+    color: var(--text-white);
+    text-decoration: none;
+    transition: color var(--transition-fast), text-shadow var(--transition-fast);
+}
+
+a:hover {
+    color: var(--accent) !important;
+    text-shadow: 0 0 12px rgba(255, 193, 7, 0.5);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 
 /* ========================================
-   🎬 ГЛАВНАЯ: ГЕРОЙ-БЛОК С ФОТО
+   🎬 ГЕРОЙ-СЕКЦИЯ
    ======================================== */
 .hero-section {
     background: 
-        linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 100%),
+        linear-gradient(180deg, rgba(15, 15, 25, 0.85) 0%, rgba(20, 20, 35, 0.75) 100%),
         url('/assets/images/fon.jpg') center/cover no-repeat;
     padding: 100px 0 80px;
     border-radius: 0 0 25px 25px;
     margin-bottom: 40px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: var(--shadow);
     position: relative;
     overflow: hidden;
 }
@@ -82,24 +163,22 @@ body::before {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 50px;
-    background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+    height: 60px;
+    background: linear-gradient(to top, rgba(20, 20, 35, 0.9), transparent);
     pointer-events: none;
 }
 
 .hero-section h1 {
     font-size: 2.8rem !important;
-    font-weight: 700 !important;
-    color: var(--text-white) !important;
-    text-shadow: 0 3px 12px rgba(0,0,0,0.9);
+    font-weight: 800 !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
     margin-bottom: 20px;
-    line-height: 1.2;
 }
 
 .hero-section .lead {
     font-size: 1.4rem !important;
     color: var(--text-bright) !important;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
     font-weight: 400;
 }
 
@@ -110,60 +189,21 @@ body::before {
     padding: 12px 35px;
     border-radius: 10px;
     border: none;
-    box-shadow: 0 4px 15px rgba(255,255,255,0.3);
-    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    transition: all var(--transition-normal);
 }
 
 .hero-section .btn-light:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(255,255,255,0.4);
-    background: #f8f8f8 !important;
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5);
 }
 
 /* ========================================
-   📝 ТИПОГРАФИКА — ВСЕГДА БЕЛЫЙ ТЕКСТ
-   ======================================== */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--text-white) !important;
-    font-weight: 700;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-    margin-bottom: 0.75em;
-}
-
-p, span, li, label {
-    color: var(--text-bright);
-}
-
-.text-muted {
-    color: var(--text-bright) !important;
-    opacity: 1 !important;
-}
-
-a {
-    color: var(--text-white) !important;
-    text-decoration: none;
-    transition: color var(--transition-fast), text-shadow var(--transition-fast);
-}
-
-a:hover {
-    color: var(--accent) !important;
-    text-shadow: 0 0 12px rgba(255,193,7,0.4);
-}
-
-a:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-    border-radius: 4px;
-}
-
-/* ========================================
-   🔥 "ПОПУЛЯРНЫЕ ТОВАРЫ" — КРУПНО И КРАСИВО
+   🛒 КАРТОЧКИ ТОВАРОВ
    ======================================== */
 .container h2 {
     font-size: 2.2rem !important;
     font-weight: 700 !important;
-    color: var(--text-white) !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
     margin: 50px 0 35px !important;
     position: relative;
     display: inline-block;
@@ -181,81 +221,63 @@ a:focus-visible {
     border-radius: 2px;
 }
 
-/* ========================================
-   🛒 КАТАЛОГ — БЕЛЫЙ ТЕКСТ ТОВАРОВ
-   ======================================== */
-.container h3.text-dark,
-.container h2.text-dark,
-.card-title.text-dark {
-    color: var(--text-white) !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-    font-weight: 700 !important;
-}
-
-.container p.text-muted,
-.card-text.text-muted,
-.text-muted.lead {
-    color: var(--text-bright) !important;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
-    opacity: 1 !important;
-}
-
-.container .text-primary,
-.display-5.text-primary,
-span.h5.text-primary {
-    color: var(--text-white) !important;
-    font-weight: 800 !important;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
-}
-
-/* Карточки товаров */
-.container .card,
-.card {
-    background: var(--glass);
+/* Карточки */
+.card, .container .card {
+    background: var(--glass) !important;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 18px;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 18px !important;
     box-shadow: var(--shadow);
     transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-fast);
     overflow: hidden;
 }
 
-.container .card:hover,
-.card:hover {
+.card:hover, .container .card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--glass-highlight);
+    border-color: var(--glass-highlight) !important;
 }
 
-.container .card-title,
-.card-title {
+.card-title, .container .card-title {
     font-size: 1.35rem !important;
     font-weight: 700 !important;
     color: var(--text-white) !important;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     margin-bottom: 10px !important;
-    line-height: 1.3;
 }
 
-.container .card-text,
-.card-text {
+.card-text, .container .card-text {
     font-size: 1.05rem !important;
     color: var(--text-bright) !important;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     opacity: 1 !important;
     line-height: 1.5;
 }
 
-.container .text-primary.h5,
-.container span.h5.text-primary {
-    font-size: 1.5rem !important;
+.text-primary, .container .text-primary {
     color: var(--text-white) !important;
     font-weight: 800 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Карточка товара в каталоге */
+.product-card {
+    background: var(--glass) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    transition: all var(--transition-normal);
+}
+
+.product-card:hover {
+    border-color: var(--glass-highlight) !important;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
 }
 
 /* ========================================
-   ✅ СПИСОК ПРЕИМУЩЕСТВ — ЗЕЛЁНЫЕ ГАЛОЧКИ
+   ✅ СПИСОК ПРЕИМУЩЕСТВ
    ======================================== */
 .list-group-flush {
     background: transparent !important;
@@ -268,7 +290,7 @@ span.h5.text-primary {
     font-size: 1.25rem !important;
     font-weight: 600 !important;
     color: var(--text-white) !important;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -286,75 +308,131 @@ span.h5.text-primary {
     fill: var(--accent-green) !important;
     font-size: 1.8rem !important;
     min-width: 28px;
-    text-shadow: 0 2px 8px rgba(46,204,113,0.5), 0 0 15px rgba(46,204,113,0.3);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    text-shadow: 0 2px 8px rgba(46, 204, 113, 0.5);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
     transition: transform 0.2s ease;
 }
 
 .list-group-item:hover .bi-check-circle-fill,
 .list-group-item:hover i.text-success {
     transform: scale(1.1);
-    color: #27ae60 !important;
-    text-shadow: 0 3px 12px rgba(46,204,113,0.7), 0 0 20px rgba(46,204,113,0.4);
 }
 
 /* ========================================
-   🔘 КНОПКА "НА ГЛАВНУЮ" — ВЫДЕЛЯЕТСЯ
+   🔘 КНОПКИ
    ======================================== */
-a[href="/"].btn-outline-secondary,
-.btn-outline-secondary[href="/"] {
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05)) !important;
-    color: var(--text-white) !important;
-    border: 2px solid rgba(255,255,255,0.7) !important;
-    box-shadow: 0 4px 15px rgba(255,255,255,0.15);
-    transition: all 0.25s ease;
-    font-weight: 600;
-}
-
-a[href="/"].btn-outline-secondary:hover,
-.btn-outline-secondary[href="/"]:hover {
-    background: rgba(255,255,255,0.25) !important;
-    border-color: var(--text-white) !important;
-    box-shadow: 0 6px 24px rgba(255,255,255,0.3), 0 0 20px rgba(255,255,255,0.1);
-    transform: translateY(-2px);
-    color: var(--text-white) !important;
-}
-
-/* Остальные кнопки */
-.btn-outline-primary {
-    color: var(--text-white) !important;
-    border-color: rgba(255,255,255,0.5);
-}
-
-.btn-outline-primary:hover {
-    background: rgba(255,255,255,0.2);
-    border-color: var(--text-white);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border: none;
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
-    transition: all 0.25s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102,126,234,0.6);
-}
-
 .btn {
     padding: 10px 24px;
     border-radius: 10px;
     font-weight: 600;
+    transition: all var(--transition-normal);
+}
+
+.btn-primary {
+    background: var(--gradient-primary) !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+}
+
+.btn-success {
+    background: var(--gradient-success) !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
+}
+
+.btn-danger {
+    background: var(--gradient-danger) !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.6);
+}
+
+.btn-warning {
+    background: var(--gradient-warning) !important;
+    border: none !important;
+    color: #1a1a1a !important;
+    font-weight: 600;
+}
+
+.btn-outline-primary {
+    color: var(--text-white) !important;
+    border: 2px solid var(--accent-blue) !important;
+    background: transparent !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--accent-blue) !important;
+    color: #fff !important;
+}
+
+.btn-outline-secondary {
+    color: var(--text-white) !important;
+    border: 2px solid var(--glass-border) !important;
+    background: transparent !important;
+}
+
+.btn-outline-secondary:hover {
+    background: var(--glass-highlight) !important;
+    border-color: var(--text-white) !important;
+}
+
+.btn-outline-danger {
+    color: var(--text-white) !important;
+    border: 2px solid var(--accent-danger) !important;
+    background: transparent !important;
+}
+
+.btn-outline-danger:hover {
+    background: var(--accent-danger) !important;
+    color: #fff !important;
+}
+
+.btn-lg {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+}
+
+.btn-sm {
+    padding: 6px 16px;
+    font-size: 0.9rem;
+}
+
+/* Кнопка "На главную" */
+a[href="/"].btn-outline-secondary,
+.btn-outline-secondary[href="/"] {
+    background: var(--glass) !important;
+    border: 2px solid var(--glass-border) !important;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+a[href="/"].btn-outline-secondary:hover,
+.btn-outline-secondary[href="/"]:hover {
+    background: var(--glass-highlight) !important;
+    border-color: var(--text-white) !important;
 }
 
 /* ========================================
    🧭 НАВИГАЦИЯ
    ======================================== */
 .navbar {
-    background: rgba(20,20,30,0.9) !important;
+    background: rgba(20, 20, 30, 0.95) !important;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid var(--glass-border);
@@ -367,13 +445,23 @@ a[href="/"].btn-outline-secondary:hover,
 }
 
 .navbar.scrolled {
-    background: rgba(15,15,25,0.95) !important;
+    background: rgba(15, 15, 25, 0.98) !important;
     padding: 8px 24px;
     box-shadow: var(--shadow-lg);
 }
 
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--text-white) !important;
+}
+
+.navbar-brand:hover {
+    opacity: 0.9;
+}
+
 .navbar-nav .nav-link {
-    color: rgba(255,255,255,0.9) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
     font-weight: 500;
     padding: 8px 16px !important;
     border-radius: 8px;
@@ -383,18 +471,7 @@ a[href="/"].btn-outline-secondary:hover,
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
     color: var(--text-white) !important;
-    background: rgba(255,255,255,0.1);
-}
-
-.navbar-brand img {
-    max-height: 44px;
-    width: auto;
-    transition: opacity var(--transition-fast);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-}
-
-.navbar-brand:hover img {
-    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .navbar-toggler {
@@ -406,59 +483,138 @@ a[href="/"].btn-outline-secondary:hover,
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
+/* Выпадающее меню */
+.dropdown-menu {
+    background: var(--glass-light) !important;
+    border: 1px solid var(--glass-border) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.dropdown-item {
+    color: var(--text-white) !important;
+    padding: 10px 20px;
+    transition: background var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background: var(--glass-highlight) !important;
+    color: var(--accent) !important;
+}
+
+.dropdown-divider {
+    border-color: var(--glass-border) !important;
+}
+
+/* Аватар в навбаре */
+.navbar .rounded-circle {
+    border: 2px solid var(--glass-border);
+    transition: border-color var(--transition-fast);
+}
+
+.navbar .rounded-circle:hover {
+    border-color: var(--accent);
+}
+
 /* ========================================
    📦 ФОРМЫ И ПОЛЯ ВВОДА
    ======================================== */
+.form-control,
+.form-select,
 input, textarea, select {
-    background: rgba(255,255,255,0.95) !important;
-    color: #1a1a1a !important;
-    border: 1px solid rgba(255,255,255,0.3);
+    background: var(--glass) !important;
+    color: var(--text-white) !important;
+    border: 1px solid var(--glass-border) !important;
     border-radius: 10px;
     padding: 12px 16px;
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
+.form-control:focus,
+.form-select:focus,
 input:focus, textarea:focus, select:focus {
-    outline: none;
+    background: var(--glass-light) !important;
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(255,193,7,0.25);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25) !important;
+    color: var(--text-white) !important;
+    outline: none;
 }
 
-input::placeholder, textarea::placeholder {
-    color: rgba(26,26,26,0.5);
+.form-control::placeholder,
+textarea::placeholder,
+input::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 1;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-disabled) !important;
+    cursor: not-allowed;
+}
+
+.form-label {
+    color: var(--text-white) !important;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: var(--text-muted) !important;
+    font-size: 0.875rem;
+}
+
+/* Большие формы */
+.form-control-lg {
+    padding: 14px 18px;
+    font-size: 1.1rem;
+    border-radius: 12px;
 }
 
 /* ========================================
-   🏷️ БЕЙДЖИ
+   🏷️ БЕЙДЖИ И ТЕГИ
    ======================================== */
 .badge {
     font-weight: 600;
     padding: 0.5em 0.9em;
     border-radius: 20px;
+    font-size: 0.85rem;
 }
 
 .badge.bg-success {
-    background: rgba(25,135,84,0.95) !important;
-    color: #ffffff !important;
-    box-shadow: 0 2px 8px rgba(25,135,84,0.3);
+    background: rgba(46, 204, 113, 0.9) !important;
+    color: #fff !important;
 }
 
 .badge.bg-warning {
-    background: rgba(255,193,7,0.95) !important;
+    background: rgba(255, 193, 7, 0.9) !important;
     color: #1a1a1a !important;
+}
+
+.badge.bg-danger {
+    background: rgba(220, 53, 69, 0.9) !important;
+    color: #fff !important;
+}
+
+.badge.bg-primary {
+    background: var(--gradient-primary) !important;
+    color: #fff !important;
 }
 
 /* ========================================
    🔤 ИКОНКИ
    ======================================== */
-.bi, svg, i {
+.bi, svg, i, [class*="bi-"] {
     color: var(--text-white) !important;
     fill: var(--text-white) !important;
     transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 a:hover .bi,
-.btn:hover .bi {
+.btn:hover .bi,
+.nav-link:hover .bi {
     color: var(--accent) !important;
     transform: scale(1.05);
 }
@@ -469,7 +625,7 @@ a:hover .bi,
 .footer {
     flex-shrink: 0;
     width: 100%;
-    background: rgba(10,10,18,0.95);
+    background: rgba(10, 10, 18, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--glass-border);
@@ -478,8 +634,12 @@ a:hover .bi,
     margin-top: auto;
 }
 
-.footer p, .footer a {
+.footer p, .footer a, .footer small {
     color: var(--text-bright) !important;
+}
+
+.footer a:hover {
+    color: var(--accent) !important;
 }
 
 /* ========================================
@@ -496,6 +656,10 @@ body {
     padding: 24px 0;
 }
 
+.container {
+    max-width: 1200px;
+}
+
 /* ========================================
    ✨ АНИМАЦИИ
    ======================================== */
@@ -504,9 +668,19 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes slideInCheck {
     from { opacity: 0; transform: translateX(-20px); }
     to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
 .card, .product-card {
@@ -528,9 +702,23 @@ body {
 .list-group-item.bg-transparent:nth-child(2) { animation-delay: 0.1s; }
 .list-group-item.bg-transparent:nth-child(3) { animation-delay: 0.2s; }
 
+.alert[role="alert"] {
+    animation: fadeInDown 0.3s ease;
+}
+
 /* ========================================
    📱 АДАПТИВНОСТЬ
    ======================================== */
+@media (max-width: 992px) {
+    .hero-section h1 {
+        font-size: 2.3rem !important;
+    }
+    
+    .hero-section .lead {
+        font-size: 1.2rem !important;
+    }
+}
+
 @media (max-width: 768px) {
     .hero-section {
         padding: 70px 0 50px;
@@ -549,22 +737,17 @@ body {
         font-size: 1.7rem !important;
     }
     
-    .container .card-title {
+    .card-title {
         font-size: 1.15rem !important;
     }
     
-    .container .card-text {
+    .card-text {
         font-size: 0.95rem !important;
     }
     
     .list-group-item.bg-transparent {
         font-size: 1.1rem !important;
         padding: 10px 0 !important;
-    }
-    
-    .list-group-item .bi-check-circle-fill,
-    .list-group-item i.text-success {
-        font-size: 1.5rem !important;
     }
     
     .navbar {
@@ -578,12 +761,37 @@ body {
         margin: 4px 0;
     }
     
-    @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-        }
+    .btn-lg {
+        width: 100%;
+    }
+    
+    /* Профиль на мобильных */
+    .profile-card {
+        margin-bottom: 1rem;
+    }
+    
+    .form-control-lg {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section h1 {
+        font-size: 1.8rem !important;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.6rem; }
+    h3 { font-size: 1.3rem; }
+}
+
+/* Уменьшение анимаций для пользователей с предпочтениями */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
 
@@ -591,11 +799,13 @@ body {
    🌙 ТЁМНАЯ ТЕМА СИСТЕМЫ
    ======================================== */
 @media (prefers-color-scheme: dark) {
-    input, textarea, select {
-        background: rgba(40,40,50,0.95) !important;
+    /* Уже тёмная тема по умолчанию, но для совместимости */
+    input, textarea, select, .form-control {
+        background: var(--glass) !important;
         color: var(--text-white) !important;
         border-color: var(--glass-border) !important;
     }
+    
     input::placeholder, textarea::placeholder {
         color: var(--text-muted);
     }
@@ -606,30 +816,798 @@ body {
    ======================================== */
 @media (prefers-contrast: high) {
     body::before {
-        background: rgba(0,0,0,0.9) !important;
+        background: rgba(0, 0, 0, 0.95) !important;
     }
+    
     .text-muted {
         color: var(--text-white) !important;
+        opacity: 0.9 !important;
     }
-    .card, .bg-glass {
-        background: rgba(20,20,30,0.95) !important;
-        border-color: rgba(255,255,255,0.4) !important;
+    
+    .card, .bg-glass, .glass {
+        background: rgba(25, 25, 40, 0.98) !important;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    .btn-outline-primary,
+    .btn-outline-secondary {
+        border-width: 3px !important;
     }
 }
 
 /* ========================================
-   🌟 ВЫДЕЛЕНИЕ НАЗВАНИЯ "ПИКСЕЛЬ"
+   🌟 АКЦЕНТЫ И ВЫДЕЛЕНИЯ
    ======================================== */
 .text-accent {
-    color: #ffc107 !important;
-    text-shadow: 0 0 20px rgba(255, 193, 7, 0.5), 0 2px 8px rgba(0,0,0,0.9);
+    color: var(--accent) !important;
+    text-shadow: 0 0 20px rgba(255, 193, 7, 0.5), 0 2px 8px rgba(0, 0, 0, 0.7);
     font-weight: 800 !important;
     display: inline-block;
-    margin-top: 8px;
 }
 
-@media (max-width: 768px) {
-    .text-accent {
-        font-size: 2.2rem !important;
+.text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* ========================================
+   🛒 КОРЗИНА — ТАБЛИЦА ТОВАРОВ
+   ======================================== */
+.cart-table-wrapper {
+    background: transparent !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+.cart-item {
+    background: var(--glass) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1.25rem 1.5rem !important;
+    border-left: 2px solid var(--glass-border) !important;
+    border-right: 2px solid var(--glass-border) !important;
+    transition: background var(--transition-normal);
+}
+
+.cart-item.cart-item-first {
+    border-top: 2px solid var(--glass-border) !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+}
+
+.cart-item.cart-item-middle {
+    border-top: none !important;
+    border-bottom: 2px solid var(--glass-border) !important;
+}
+
+.cart-item.cart-item-last {
+    border-top: none !important;
+    border-bottom: 2px solid var(--glass-border) !important;
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+    background: var(--glass-light) !important;
+}
+
+.cart-item:hover {
+    background: var(--glass-highlight) !important;
+}
+
+.cart-item h5 {
+    color: var(--text-white) !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+}
+
+.cart-item strong {
+    color: var(--text-white) !important;
+    font-size: 1.05rem !important;
+}
+
+.cart-item .text-muted {
+    color: var(--text-muted) !important;
+    font-size: 0.85rem !important;
+}
+
+.cart-total-block {
+    background: rgba(13, 110, 253, 0.2) !important;
+    border: 2px solid rgba(13, 110, 253, 0.4) !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+}
+
+.cart-total-block h4 {
+    color: var(--text-white) !important;
+    margin: 0 !important;
+    font-size: 1.5rem !important;
+}
+
+/* Кнопка оформления заказа */
+#btn-show-delivery {
+    background: var(--gradient-success) !important;
+    border: none !important;
+    color: #fff !important;
+    min-width: 220px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+}
+
+#btn-show-delivery:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(46, 204, 113, 0.6);
+}
+
+.delivery-form-wrapper {
+    animation: fadeInUp 0.4s ease-out both;
+}
+
+/* ========================================
+   🎯 МОДАЛЬНОЕ ОКНО ФИЛЬТРОВ
+   ======================================== */
+#filterModal .modal-content {
+    background: var(--glass-light) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 20px !important;
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#filterModal .modal-header {
+    border-bottom: 1px solid var(--glass-border) !important;
+    padding: 1.25rem 1.5rem !important;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#filterModal .modal-title {
+    color: var(--text-white) !important;
+    font-weight: 700 !important;
+    font-size: 1.3rem !important;
+}
+
+#filterModal .modal-body {
+    padding: 1.5rem !important;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+#filterModal .modal-footer {
+    border-top: 1px solid var(--glass-border) !important;
+    padding: 1rem 1.5rem !important;
+    justify-content: space-between !important;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.filter-list-vertical {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+}
+
+.filter-option {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.875rem 1rem !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 2px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all var(--transition-normal) !important;
+    width: 100% !important;
+}
+
+.filter-option:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 193, 7, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.filter-option.active {
+    background: rgba(255, 193, 7, 0.2) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3) !important;
+}
+
+.filter-checkbox {
+    display: none !important;
+}
+
+.filter-label {
+    flex: 1 !important;
+    color: var(--text-white) !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    text-align: left !important;
+}
+
+.filter-check {
+    color: var(--accent) !important;
+    font-size: 1.2rem !important;
+    opacity: 0 !important;
+    transform: scale(0) !important;
+    transition: all var(--transition-normal) !important;
+}
+
+.filter-option.active .filter-check,
+.filter-option:has(.filter-checkbox:checked) .filter-check {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+/* Скроллбар в модальном окне */
+#filterModal .modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+#filterModal .modal-body::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+    border-radius: 10px;
+}
+
+#filterModal .modal-body::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 10px;
+}
+
+#filterModal .modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Кнопки в модальном окне */
+#filterModal .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+#btn-clear-filters {
+    background: rgba(220, 53, 69, 0.1) !important;
+    border-color: var(--accent-danger) !important;
+    color: var(--accent-danger) !important;
+    transition: all var(--transition-normal);
+}
+
+#btn-clear-filters:hover {
+    background: var(--accent-danger) !important;
+    color: #fff !important;
+}
+
+/* Клик по всей кнопке фильтра */
+.filter-option {
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+.filter-option * {
+    pointer-events: none !important;
+}
+
+.filter-option .filter-checkbox {
+    pointer-events: auto !important;
+}
+
+.filter-option:active {
+    transform: scale(0.98) !important;
+}
+
+/* Адаптивность фильтров */
+@media (max-width: 576px) {
+    .filter-list-vertical {
+        grid-template-columns: 1fr !important;
     }
+    
+    #filterModal .modal-dialog {
+        margin: 0.5rem !important;
+    }
+}
+
+/* ========================================
+   👤 ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
+   ======================================== */
+.profile-page .card,
+.orders-page .card {
+    background: var(--glass) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 15px !important;
+}
+
+.profile-page .card-header,
+.orders-page .card-header {
+    background: var(--gradient-primary) !important;
+    color: var(--text-white) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.profile-page .card-body,
+.orders-page .card-body {
+    background: transparent !important;
+    color: var(--text-white) !important;
+    padding: 1.5rem !important;
+}
+
+.profile-page .card-footer,
+.orders-page .card-footer {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-top: 1px solid var(--glass-border) !important;
+    color: var(--text-white) !important;
+}
+
+/* Карточка профиля */
+.profile-card {
+    background: var(--gradient-primary) !important;
+    color: var(--text-white) !important;
+    border: none !important;
+}
+
+.profile-card .text-muted {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.profile-card .btn-outline-danger {
+    color: var(--text-white) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.profile-card .btn-outline-danger:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: var(--text-white) !important;
+}
+
+/* Таблицы в профиле и заказах */
+.profile-page table,
+.orders-page table,
+.order-card table {
+    color: var(--text-white) !important;
+    width: 100%;
+}
+
+.profile-page table thead,
+.orders-page table thead,
+.order-card table thead {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-white) !important;
+}
+
+.profile-page table tbody tr,
+.orders-page table tbody tr,
+.order-card table tbody tr {
+    border-color: var(--glass-border) !important;
+    transition: background var(--transition-fast);
+}
+
+.profile-page table tbody tr:hover,
+.orders-page table tbody tr:hover,
+.order-card table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.profile-page table td,
+.profile-page table th,
+.orders-page table td,
+.orders-page table th,
+.order-card table td,
+.order-card table th {
+    color: var(--text-white) !important;
+    border-color: var(--glass-border) !important;
+    background: transparent !important;
+    padding: 12px 15px;
+}
+
+/* Карточки заказов */
+.order-card {
+    background: var(--glass) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 15px !important;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    margin-bottom: 1rem;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.order-card .card-header {
+    background: var(--gradient-primary) !important;
+    color: var(--text-white) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+}
+
+.order-card .card-body {
+    background: transparent !important;
+    color: var(--text-white) !important;
+}
+
+.order-card .card-footer {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-top: 1px solid var(--glass-border) !important;
+}
+
+.order-card .text-muted {
+    color: var(--text-muted) !important;
+}
+
+.order-card strong,
+.order-card h4,
+.order-card h5,
+.order-card h6,
+.order-card p {
+    color: var(--text-white) !important;
+}
+
+/* Секции в профиле */
+.profile-page .section,
+.orders-page .section {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Хлебные крошки */
+.breadcrumb {
+    background: var(--glass) !important;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+}
+
+.breadcrumb-item a {
+    color: var(--accent-blue) !important;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-muted) !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-muted);
+}
+
+/* Кнопки в профиле */
+.profile-page .btn-primary,
+.orders-page .btn-primary {
+    background: var(--gradient-primary) !important;
+}
+
+.profile-page .btn-warning,
+.orders-page .btn-warning {
+    background: var(--gradient-warning) !important;
+    color: #1a1a1a !important;
+}
+
+.profile-page .btn-success,
+.orders-page .btn-success {
+    background: var(--gradient-success) !important;
+}
+
+/* Аватар в профиле */
+#avatar-preview {
+    border: 4px solid var(--glass-border);
+    transition: border-color var(--transition-fast);
+}
+
+#avatar-preview:hover {
+    border-color: var(--accent);
+}
+
+/* ========================================
+   📧 СТРАНИЦА АВТОРИЗАЦИИ
+   ======================================== */
+.auth-card {
+    background: var(--glass) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 20px !important;
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-card .card-body {
+    background: transparent !important;
+    padding: 2.5rem !important;
+}
+
+.auth-card h2 {
+    color: var(--text-white) !important;
+    font-weight: 700 !important;
+}
+
+.auth-card .text-muted {
+    color: var(--text-muted) !important;
+}
+
+.auth-card .form-control {
+    background: var(--glass) !important;
+    border-color: var(--glass-border) !important;
+    color: var(--text-white) !important;
+}
+
+.auth-card .form-control:focus {
+    background: var(--glass-light) !important;
+    border-color: var(--accent) !important;
+}
+
+.auth-card .form-label {
+    color: var(--text-white) !important;
+}
+
+.auth-card .form-text {
+    color: var(--text-muted) !important;
+}
+
+.auth-card .btn-primary {
+    background: var(--gradient-primary) !important;
+    font-weight: 600;
+}
+
+.auth-card a {
+    color: var(--accent-blue) !important;
+}
+
+.auth-card a:hover {
+    color: var(--accent) !important;
+    text-decoration: underline;
+}
+
+/* ========================================
+   🔔 УВЕДОМЛЕНИЯ (ФЛЕШ-СООБЩЕНИЯ)
+   ======================================== */
+.alert {
+    background: var(--glass) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+    color: var(--text-white) !important;
+    box-shadow: var(--shadow);
+}
+
+.alert-success {
+    border-left: 4px solid var(--accent-green) !important;
+}
+
+.alert-danger {
+    border-left: 4px solid var(--accent-danger) !important;
+}
+
+.alert-warning {
+    border-left: 4px solid var(--accent) !important;
+    color: var(--text-white) !important;
+}
+
+.alert-info {
+    border-left: 4px solid var(--accent-blue) !important;
+}
+
+.alert .alert-link {
+    color: var(--accent) !important;
+    font-weight: 600;
+}
+
+.alert .btn-close {
+    filter: invert(1);
+}
+
+/* ========================================
+   🔄 СКРОЛЛБАР (ГЛОБАЛЬНЫЙ)
+   ======================================== */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Для Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+/* ========================================
+   🎨 ДОПОЛНИТЕЛЬНЫЕ УТИЛИТЫ
+   ======================================== */
+.glass {
+    background: var(--glass) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border) !important;
+}
+
+.glass-light {
+    background: var(--glass-light) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border) !important;
+}
+
+.shadow-glow {
+    box-shadow: var(--shadow-glow) !important;
+}
+
+.text-glow {
+    text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+}
+
+/* Плавная прокрутка для якорей */
+html {
+    scroll-padding-top: 80px;
+}
+
+/* Убираем стандартные стили Bootstrap для тёмной темы */
+.bg-white {
+    background: var(--glass) !important;
+}
+
+.bg-light {
+    background: var(--glass-light) !important;
+}
+
+.table-light {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-white) !important;
+}
+
+/* ========================================
+   🎯 ФИНАЛЬНЫЕ ПЕРЕОПРЕДЕЛЕНИЯ BOOTSTRAP
+   ======================================== */
+
+/* Модальные окна */
+.modal-content {
+    background: var(--glass-light) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-white) !important;
+}
+
+.modal-header {
+    border-bottom-color: var(--glass-border) !important;
+}
+
+.modal-footer {
+    border-top-color: var(--glass-border) !important;
+}
+
+.modal-title {
+    color: var(--text-white) !important;
+}
+
+/* Таблицы */
+.table {
+    color: var(--text-white) !important;
+}
+
+.table > :not(caption) > * > * {
+    background: transparent !important;
+    border-color: var(--glass-border) !important;
+    color: var(--text-white) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.table-hover > tbody > tr:hover > * {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Навигация страниц (пагинация) */
+.page-link {
+    background: var(--glass) !important;
+    border-color: var(--glass-border) !important;
+    color: var(--text-white) !important;
+}
+
+.page-link:hover {
+    background: var(--glass-highlight) !important;
+    color: var(--accent) !important;
+}
+
+.page-item.active .page-link {
+    background: var(--gradient-primary) !important;
+    border-color: var(--accent-blue) !important;
+    color: #fff !important;
+}
+
+/* Прогресс-бары */
+.progress {
+    background: var(--glass) !important;
+}
+
+.progress-bar {
+    background: var(--gradient-primary) !important;
+}
+
+/* Аккордеон */
+.accordion-item {
+    background: var(--glass) !important;
+    border-color: var(--glass-border) !important;
+}
+
+.accordion-button {
+    background: transparent !important;
+    color: var(--text-white) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--glass-light) !important;
+    color: var(--accent) !important;
+}
+
+.accordion-button::after {
+    filter: invert(1);
+}
+
+/* Вкладки */
+.nav-tabs {
+    border-bottom-color: var(--glass-border) !important;
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-muted) !important;
+    border-color: transparent !important;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: var(--glass-border) !important;
+    color: var(--text-white) !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--text-white) !important;
+    background: var(--glass) !important;
+    border-color: var(--glass-border) var(--glass-border) transparent !important;
+}
+
+/* Карусель */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
+.carousel-indicators [data-bs-target] {
+    background: var(--text-white);
+    opacity: 0.5;
+}
+
+.carousel-indicators .active {
+    opacity: 1;
+}
+
+/* Тултипы и попапы */
+.tooltip-inner {
+    background: var(--glass-light) !important;
+    color: var(--text-white) !important;
+    border: 1px solid var(--glass-border);
+}
+
+.bs-tooltip-top .tooltip-arrow::before,
+.bs-tooltip-bottom .tooltip-arrow::before {
+    border-top-color: var(--glass-border) !important;
+    border-bottom-color: var(--glass-border) !important;
+}
+
+/* Анимация бейджа корзины */
+.navbar .badge {
+    animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.2); }
+    100% { transform: translate(-50%, -50%) scale(1); }
 }
