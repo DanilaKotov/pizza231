@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Services;
 
 class DatabaseStorage implements IStorage
@@ -8,7 +11,7 @@ class DatabaseStorage implements IStorage
         // оставьте метод пустым, мы напишем реализацию позже
         return [];
     }
-    
+
     public function saveData(string $name, array $data): bool
     {
         // оставьте метод пустым, мы напишем реализацию позже

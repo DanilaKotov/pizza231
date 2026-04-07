@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controllers;
 
 // 👇 Подключения моделей, шаблонов и сервисов
@@ -28,7 +31,7 @@ class ProductController
             $serviceStorage = new \App\Services\DatabaseStorage();
             $productModel = new Product($serviceStorage, Config::FILE_PRODUCTS);
         }
-        
+
         if ($id === null) {
             // Каталог всех товаров
             $products = $productModel->loadData() ?? [];

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controllers;
 
 require_once __DIR__ . '/../Views/BaseTemplate.php';
@@ -8,7 +11,7 @@ use App\Views\HomeTemplate;
 
 class HomeController
 {
-    public function get(): string 
+    public function get(): string
     {
         return HomeTemplate::getTemplate();
     }

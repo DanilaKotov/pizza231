@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Views;
 
 require_once __DIR__ . '/BaseTemplate.php';
@@ -15,7 +18,7 @@ use App\Configs\Config;
 
 class HomeTemplate extends BaseTemplate
 {
-    public static function getTemplate(string $content = ''): string 
+    public static function getTemplate(string $content = ''): string
     {
         // 👇 ИЗМЕНЕНО: Загружаем продукты через модель с внедрением зависимости
         if (Config::STORAGE_TYPE == Config::TYPE_FILE) {
@@ -25,9 +28,9 @@ class HomeTemplate extends BaseTemplate
             $serviceStorage = new \App\Services\DatabaseStorage();
             $productModel = new Product($serviceStorage, Config::FILE_PRODUCTS);
         }
-        
+
         $products = $productModel->loadData() ?? [];
-        
+
         // 👇 Генерируем HTML для карточек товаров
         $productsHtml = self::renderProducts($products);
 
@@ -55,7 +58,7 @@ class HomeTemplate extends BaseTemplate
                     </ul>
                 </div>
             </div>
-            
+
             <!-- 👇 Секция с товарами -->
             <div class="row mb-5">
                 <div class="col-12">
@@ -65,10 +68,10 @@ class HomeTemplate extends BaseTemplate
             </div>
         </div>
         ';
-        
+
         return parent::getTemplate($ourContent);
     }
-    
+
     /**
      * Рендерит карточки товаров
      */
@@ -79,20 +82,20 @@ class HomeTemplate extends BaseTemplate
         }
 
         $html = '<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">';
-        
+
         foreach ($products as $product) {
             // Экранируем вывод для безопасности
             $name = htmlspecialchars($product['name'] ?? 'Без названия');
             $description = htmlspecialchars($product['description'] ?? '');
             $price = number_format($product['price'] ?? 0, 0, '.', ' ');
             $image = htmlspecialchars($product['image'] ?? '/assets/img/no-image.jpg');
-            $id = (int)($product['id'] ?? 0);
-            
+            $id = (int) ($product['id'] ?? 0);
+
             $html .= '
             <div class="col">
                 <div class="card h-100 shadow-sm">
-                    <img src="' . $image . '" 
-                         class="card-img-top" 
+                    <img src="' . $image . '"
+                         class="card-img-top"
                          alt="' . $name . '"
                          style="height: 200px; object-fit: cover;"
                          onerror="this.src=\'https://via.placeholder.com/300x200?text=Нет+фото\';">
@@ -107,7 +110,7 @@ class HomeTemplate extends BaseTemplate
                 </div>
             </div>';
         }
-        
+
         $html .= '</div>';
         return $html;
     }

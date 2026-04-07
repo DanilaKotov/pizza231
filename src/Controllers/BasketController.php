@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controllers;
 
 use App\Models\Product;
@@ -21,10 +24,10 @@ class BasketController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        
+
         if (isset($_POST['id'])) {
-            $product_id = (int)$_POST['id'];
-            
+            $product_id = (int) $_POST['id'];
+
             // 👇 ИЗМЕНЕНО: Загружаем товар с внедрением зависимости
             if (Config::STORAGE_TYPE == Config::TYPE_FILE) {
                 $serviceStorage = new \App\Services\FileStorage();
@@ -33,46 +36,46 @@ class BasketController
                 $serviceStorage = new \App\Services\DatabaseStorage();
                 $productModel = new Product($serviceStorage, Config::FILE_PRODUCTS);
             }
-            
+
             $allProducts = $productModel->loadData();
             $product = null;
-            
+
             // Ищем товар по ID
             if ($allProducts) {
                 foreach ($allProducts as $item) {
-                    if ((int)$item['id'] === $product_id) {
+                    if ((int) $item['id'] === $product_id) {
                         $product = $item;
                         break;
                     }
                 }
             }
-            
+
             // Инициализируем корзину, если нет
             if (!isset($_SESSION['basket'])) {
                 $_SESSION['basket'] = [];
             }
-            
+
             // Если товар уже есть — увеличиваем количество
             if (isset($_SESSION['basket'][$product_id])) {
                 $_SESSION['basket'][$product_id]['quantity']++;
             } else {
                 $_SESSION['basket'][$product_id] = [
-                    'quantity' => 1
+                    'quantity' => 1,
                 ];
             }
-            
+
             // 👇 Флеш-сообщение С НАЗВАНИЕМ ТОВАРА
             $productName = $product ? htmlspecialchars($product['name']) : 'Товар';
             $_SESSION['flash'] = "«{$productName}» успешно добавлен в корзину!";
             $_SESSION['flash_type'] = "success";
         }
-        
+
         // 👇 Редирект назад
         $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
         header("Location: {$prevUrl}");
         exit();
     }
-    
+
     /**
      * Очистка корзины
      */
@@ -82,11 +85,11 @@ class BasketController
             session_start();
         }
         $_SESSION['basket'] = [];
-        
+
         // 👇 Флеш-сообщение
         $_SESSION['flash'] = "Корзина очищена!";
         $_SESSION['flash_type'] = "warning";
-        
+
         // 👇 Редирект
         $prevUrl = $_SERVER['HTTP_REFERER'] ?? '/';
         header("Location: {$prevUrl}");

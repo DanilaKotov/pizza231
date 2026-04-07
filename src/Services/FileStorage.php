@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Services;
 
 class FileStorage implements IStorage
 {
     public function loadData(string $name): ?array
-    {       
+    {
         if (!file_exists($name)) {
             return null;
         }
@@ -23,7 +26,7 @@ class FileStorage implements IStorage
             }
         }
 
-        return $indexedData; 
+        return $indexedData;
     }
 
     public function saveData(string $name, array $arr): bool
@@ -32,7 +35,7 @@ class FileStorage implements IStorage
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
-        
+
         $allRecords = [];
         if (file_exists($name) && filesize($name) > 0) {
             $data = file_get_contents($name);
@@ -41,12 +44,12 @@ class FileStorage implements IStorage
                 $allRecords = $decoded;
             }
         }
-        
+
         $allRecords[] = $arr;
-        
+
         $json = json_encode($allRecords, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $result = file_put_contents($name, $json);
-        
+
         return $result !== false;
     }
 }

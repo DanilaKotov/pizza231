@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__ . '/src/Router/Router.php';
 require_once __DIR__ . '/src/Controllers/HomeController.php';
 require_once __DIR__ . '/src/Controllers/AboutController.php';
