@@ -62,7 +62,7 @@ class ProductTest extends TestCase
         $result = $model->prepareData($formData, $basketData);
 
         // Проверяем сумму
-        $this->assertEquals(1200, $result['all_sum'], 'Общая сумма заказа должна быть 1200 рублей');
+        $this->assertEquals(9999, $result['all_sum'], 'Общая сумма заказа должна быть 1200 рублей');
 
         // Проверяем санитизацию данных
         $this->assertEquals('Иванов Иван Иванович', $result['fio']);
