@@ -54,11 +54,16 @@ class AuthTemplate extends BaseTemplate
         return parent::getTemplate($content);
     }
 
-    /**
-     * Шаблон входа
-     */
-    public static function getLoginTemplate(): string
+
+        public static function getLoginTemplate(array $errors = []): string
     {
+        $errorHtml = '';
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                $errorHtml .= '<div class="alert alert-danger mb-3">' . htmlspecialchars($error) . '</div>';
+            }
+        }
+
         $content = <<<HTML
             <div class="container py-5">
                 <div class="row justify-content-center">
@@ -67,6 +72,7 @@ class AuthTemplate extends BaseTemplate
                             <div class="card-body p-5">
                                 <h2 class="text-center mb-4">Вход</h2>
                                 <p class="text-muted text-center mb-4">Войдите в свой аккаунт</p>
+                                {$errorHtml}
                                 <form action="/auth/login" method="POST">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email *</label>

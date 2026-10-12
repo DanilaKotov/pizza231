@@ -1,32 +1,25 @@
 <?php
-
-declare(strict_types=1);
-
 namespace App\Services;
 
-class FileStorage implements IStorage
+class FileStorage implements ILoadStorage, ISaveStorage
 {
     public function loadData(string $name): ?array
-    {
+    {       
         if (!file_exists($name)) {
             return null;
         }
-
         $data = file_get_contents($name);
         $arr = json_decode($data, true);
-
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($arr)) {
             return null;
         }
-
         $indexedData = [];
         foreach ($arr as $item) {
             if (isset($item['id'])) {
                 $indexedData[$item['id']] = $item;
             }
         }
-
-        return $indexedData;
+        return $indexedData; 
     }
 
     public function saveData(string $name, array $arr): bool
@@ -35,7 +28,6 @@ class FileStorage implements IStorage
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
-
         $allRecords = [];
         if (file_exists($name) && filesize($name) > 0) {
             $data = file_get_contents($name);
@@ -44,12 +36,9 @@ class FileStorage implements IStorage
                 $allRecords = $decoded;
             }
         }
-
         $allRecords[] = $arr;
-
         $json = json_encode($allRecords, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $result = file_put_contents($name, $json);
-
         return $result !== false;
     }
 }

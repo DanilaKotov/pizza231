@@ -6,7 +6,7 @@ namespace App\Views;
 
 class OrderTemplate extends BaseTemplate
 {
-    public static function getOrderTemplate(array $products): string
+    public static function getOrderTemplate(array $products, array $errors = [], array $oldData = []): string
     {
         $all_sum = 0;
         $content = '';
@@ -14,6 +14,29 @@ class OrderTemplate extends BaseTemplate
         $content .= '<div class="container py-5">';
         $content .= '<h1 class="text-center mb-5">Создание заказа</h1>';
         $content .= '<h3 class="mb-4">Корзина</h3>';
+
+        // HTML для ошибок
+        $errorsHtml = '';
+        if (!empty($errors)) {
+            $errorsHtml .= '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
+            $errorsHtml .= '<h5 class="alert-heading">❗ Ошибки в форме:</h5>';
+            $errorsHtml .= '<ul class="mb-0">';
+            foreach ($errors as $field => $error) {
+                $errorsHtml .= '<li><strong>' . ucfirst($field) . ':</strong> ' . htmlspecialchars($error) . '</li>';
+            }
+            $errorsHtml .= '</ul>';
+            $errorsHtml .= '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+            $errorsHtml .= '</div>';
+        }
+
+        // Подготовка старых данных с экранированием
+        $oldFio = htmlspecialchars($oldData['fio'] ?? '');
+        $oldPhone = htmlspecialchars($oldData['phone'] ?? '');
+        $oldEmail = htmlspecialchars($oldData['email'] ?? '');
+        $oldAddress = htmlspecialchars($oldData['address'] ?? '');
+
+        // Флаг наличия ошибок для JavaScript
+        $hasErrorsVar = !empty($errors) ? 'true' : 'false';
 
         if (empty($products)) {
             $content .= <<<LINE
@@ -91,17 +114,20 @@ class OrderTemplate extends BaseTemplate
                         <div class="card-header bg-primary text-white">
                             <h4 class="mb-0"><i class="bi bi-truck me-2"></i>Данные доставки</h4>
                         </div>
-                                            <div class="card-body">
+                        <div class="card-body">
+                            {$errorsHtml}
                             <form action="/order" method="POST" id="order-form">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="fio" class="form-label">Ваше ФИО *</label>
                                         <input type="text" class="form-control" id="fio" name="fio"
+                                               value="{$oldFio}"
                                                required placeholder="">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="phone" class="form-label">Телефон *</label>
                                         <input type="tel" class="form-control" id="phone" name="phone"
+                                               value="{$oldPhone}"
                                                required placeholder="">
                                     </div>
                                     <div class="col-12">
@@ -109,11 +135,13 @@ class OrderTemplate extends BaseTemplate
                                             <i class="bi bi-envelope me-1"></i>Электронная почта *
                                         </label>
                                         <input type="email" class="form-control" id="email" name="email"
+                                               value="{$oldEmail}"
                                                required placeholder="">
                                     </div>
                                     <div class="col-12">
                                         <label for="address" class="form-label">Адрес доставки *</label>
                                         <input type="text" class="form-control" id="address" name="address"
+                                               value="{$oldAddress}"
                                                required placeholder="">
                                     </div>
                                 </div>
@@ -146,6 +174,15 @@ class OrderTemplate extends BaseTemplate
                     const btnShow = document.getElementById('btn-show-delivery');
                     const formSection = document.getElementById('delivery-form-section');
 
+                    // Если есть ошибки или форма должна быть показана
+                    const hasErrors = {$hasErrorsVar};
+                    
+                    if (hasErrors && formSection) {
+                        // Показываем форму сразу при ошибках
+                        formSection.classList.remove('d-none');
+                        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    
                     if (btnShow && formSection) {
                         btnShow.addEventListener('click', function() {
                             formSection.classList.remove('d-none');

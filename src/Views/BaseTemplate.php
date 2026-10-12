@@ -94,7 +94,12 @@ class BaseTemplate
 
         if (isset($_SESSION['user'])) {
             // Пользователь авторизован
-            $avatar = $_SESSION['user']['avatar'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['user']['name'] ?? 'U') . '&background=667eea&color=fff&size=32';
+            $avatarUrl = $_SESSION['user']['avatar'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['user']['name'] ?? 'U') . '&background=667eea&color=fff&size=32';
+            // Добавляем cache-busting параметр для локальных аватарок
+            if (!str_starts_with($avatarUrl, 'https://')) {
+                $avatarUrl .= '?t=' . time();
+            }
+            $avatar = htmlspecialchars($avatarUrl);
             $userName = htmlspecialchars($_SESSION['user']['name'] ?? 'Пользователь');
 
             $html .= <<<HTML

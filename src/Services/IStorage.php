@@ -1,11 +1,10 @@
 <?php
-
-declare(strict_types=1);
-
 namespace App\Services;
 
-interface IStorage
+// 👇 НОВОЕ: Подключаем разделённые интерфейсы
+require_once __DIR__ . '/ILoadStorage.php';
+require_once __DIR__ . '/ISaveStorage.php';
+
+interface IStorage extends ILoadStorage, ISaveStorage
 {
-    public function loadData(string $name): ?array;
-    public function saveData(string $name, array $data): bool;
 }

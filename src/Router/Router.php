@@ -13,6 +13,7 @@ require_once __DIR__ . '/../Controllers/OrderController.php';
 require_once __DIR__ . '/../Controllers/AuthController.php';
 require_once __DIR__ . '/../Controllers/ProfileController.php';
 require_once __DIR__ . '/../Controllers/OrdersController.php';
+require_once __DIR__ . '/../Controllers/RegisterController.php';  // 👇 НОВОЕ
 
 use App\Controllers\HomeController;
 use App\Controllers\AboutController;
@@ -22,6 +23,7 @@ use App\Controllers\OrderController;
 use App\Controllers\AuthController;
 use App\Controllers\ProfileController;
 use App\Controllers\OrdersController;
+use App\Controllers\RegisterController;  // 👇 НОВОЕ
 
 class Router
 {
@@ -41,10 +43,13 @@ class Router
         $this->id = isset($pieces[2]) ? intval($pieces[2]) : 0;
         $method = $_SERVER['REQUEST_METHOD'];
 
+        error_log("🔀 Router: URL=$url, path=$path, resource=$resource, method=$method");
+
         $routes = $this->getRoutes();
 
         // Если маршрут не найден — возвращаем главную
         if (!isset($routes[$resource])) {
+            error_log("⚠️ Router: маршрут '$resource' не найден");
             return $this->handleDefault();
         }
 
@@ -59,8 +64,8 @@ class Router
     }
 
     /**
-     * Карта маршрутов (вместо большого switch)
-     */
+ * Карта маршрутов
+ */
     private function getRoutes(): array
     {
         return [
@@ -94,34 +99,35 @@ class Router
                 'params' => ['id' => $this->getId()],
             ],
 
-            // Корзина: добавление
+            // Корзина
             'basket' => [
                 'controller' => BasketController::class,
                 'method' => 'add',
                 'redirect' => true,
             ],
-
-            // Корзина: очистка
             'basket-clear' => [
                 'controller' => BasketController::class,
                 'method' => 'clear',
                 'redirect' => true,
             ],
 
-            // 👇 Оформление заказа: ВСЕГДА вызываем get()
-            // get() сам проверит $_SERVER['REQUEST_METHOD'] и вызовет create() внутри
+            // Оформление заказа
             'order' => [
                 'controller' => OrderController::class,
                 'method' => 'get',
             ],
 
-            // Регистрация: страница
+            // Регистрация
             'register' => [
-                'controller' => AuthController::class,
-                'method' => 'register',
+                'controller' => RegisterController::class,
+                'method' => 'get',
+            ],
+            'verify' => [
+                'controller' => RegisterController::class,
+                'method' => 'verify',
             ],
 
-            // Авторизация: действия
+            // Авторизация
             'auth' => [
                 'register' => [
                     'controller' => AuthController::class,
@@ -131,7 +137,6 @@ class Router
                 'login' => [
                     'controller' => AuthController::class,
                     'method' => 'loginSubmit',
-                    'redirect' => true,
                 ],
                 'logout' => [
                     'controller' => AuthController::class,
@@ -140,7 +145,7 @@ class Router
                 ],
             ],
 
-            // Вход: страница
+            // Вход
             'login' => [
                 'controller' => AuthController::class,
                 'method' => 'login',
@@ -149,18 +154,37 @@ class Router
             // Профиль
             'profile' => [
                 'controller' => ProfileController::class,
-                'method' => 'index',  // index() сам обрабатывает под-маршруты
+                'method' => 'index',
+                'upload-avatar' => [
+                    'controller' => ProfileController::class,
+                    'method' => 'uploadAvatar',
+                    'redirect' => true,
+                ],
+                'change-password' => [
+                    'controller' => ProfileController::class,
+                    'method' => 'changePassword',
+                    'redirect' => true,
+                ],
+                'update' => [
+                    'controller' => ProfileController::class,
+                    'method' => 'updateAjax',
+                ],
+                'update-redirect' => [
+                    'controller' => ProfileController::class,
+                    'method' => 'update',
+                    'redirect' => true,
+                ],
             ],
 
-            // Мои заказы
+            // 👇 Мои заказы (ИСПРАВЛЕНО: вложенная структура)
             'orders' => [
                 'controller' => OrdersController::class,
                 'method' => 'index',
-            ],
-            'orders/view' => [
-                'controller' => OrdersController::class,
-                'method' => 'view',
-                'params' => ['orderId' => $this->getId()],
+                'view' => [  // ← Вложенный маршрут для /orders/view/ID
+                    'controller' => OrdersController::class,
+                    'method' => 'view',
+                    'params' => ['orderId' => $this->getId()],
+                ],
             ],
         ];
     }
@@ -168,10 +192,13 @@ class Router
 
     private function executeRoute(array $route, array $pieces): string
     {
-        // Обработка вложенных маршрутов типа auth/register
-        if (isset($pieces[2]) && isset($route[$pieces[2]])) {
+        // Обработка вложенных маршрутов типа auth/register или profile/upload-avatar
+        if (isset($pieces[2]) && $pieces[2] !== '' && isset($route[$pieces[2]])) {
+            error_log("🔀 Router: вложенный маршрут найден: " . $pieces[2]);
             $route = $route[$pieces[2]];
         }
+
+        error_log("🔀 Router: выполняем контроллер=" . $route['controller'] . ", метод=" . $route['method']);
 
         // Создание контроллера
         $controller = new $route['controller']();

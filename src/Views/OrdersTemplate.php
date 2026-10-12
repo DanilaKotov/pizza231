@@ -11,9 +11,14 @@ class OrdersTemplate extends BaseTemplate
      */
     public static function getOrdersTemplate(array $user, array $orders): string
     {
-        $userName = htmlspecialchars($user['name'] ?? 'Пользователь');
+        $userName = htmlspecialchars($user['name'] ?? $user['username'] ?? 'Пользователь');
         $userEmail = htmlspecialchars($user['email'] ?? '');
-        $userAvatar = $user['avatar'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($user['name'] ?? 'U') . '&background=667eea&color=fff&size=150';
+        $userAvatarUrl = $user['avatar'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=667eea&color=fff&size=150';
+        // Добавляем cache-busting параметр для локальных аватарок
+        if (!str_starts_with($userAvatarUrl, 'https://')) {
+            $userAvatarUrl .= '?t=' . time();
+        }
+        $userAvatar = htmlspecialchars($userAvatarUrl);
 
         $content = <<<HTML
                     <div class="container py-5">
@@ -71,8 +76,8 @@ class OrdersTemplate extends BaseTemplate
             $content .= '<div class="row g-4">';
 
             foreach ($orders as $index => $order) {
-                $orderNum = count($orders) - $index;
-                $date = date('d.m.Y H:i', strtotime($order['created_at']));
+                $orderNum = $order['id'] ?? ((int)$index + 1);
+                $date = date('d.m.Y H:i', strtotime($order['created'] ?? $order['created_at'] ?? date('Y-m-d H:i:s')));
                 $sum = number_format($order['all_sum'] ?? 0, 0, '.', ' ');
                 $productsCount = count($order['products'] ?? []);
                 $fio = htmlspecialchars($order['fio'] ?? 'Не указано');
@@ -118,22 +123,31 @@ class OrdersTemplate extends BaseTemplate
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                    HTML;
+                HTML;
 
-                foreach ($order['products'] as $product) {
-                    $productName = htmlspecialchars($product['name'] ?? 'Товар');
-                    $productPrice = number_format($product['price'] ?? 0, 0, '.', ' ');
-                    $productQty = $product['quantity'] ?? 1;
-                    $productSum = $product['sum'] ?? 0;
+                // 👇 ИСПРАВЛЕНО: безопасная обработка товаров
+                if (!empty($order['products']) && is_array($order['products'])) {
+                    foreach ($order['products'] as $product) {
+                        $productName = htmlspecialchars($product['name'] ?? 'Товар удалён');
+                        $productQty = (int)($product['count_item'] ?? $product['quantity'] ?? 1);
+                        $productPrice = (float)($product['price_item'] ?? $product['price'] ?? 0);
+                        $productSum = (float)($product['sum_item'] ?? $product['sum'] ?? ($productPrice * $productQty));
 
-                    $content .= <<<HTML
-                                                                <tr>
-                                                                    <td>{$productName}</td>
-                                                                    <td class="text-center">{$productQty}</td>
-                                                                    <td class="text-end">{$productPrice} ₽</td>
-                                                                    <td class="text-end"><strong>{$productSum} ₽</strong></td>
-                                                                </tr>
+                        $content .= <<<HTML
+                                                            <tr>
+                                                                <td>{$productName}</td>
+                                                                <td class="text-center">{$productQty} шт.</td>
+                                                                <td class="text-end">{$productPrice} ₽</td>
+                                                                <td class="text-end"><strong>{$productSum} ₽</strong></td>
+                                                            </tr>
                         HTML;
+                    }
+                } else {
+                    $content .= <<<HTML
+                                                            <tr>
+                                                                <td colspan="4" class="text-center text-muted">Товары не найдены</td>
+                                                            </tr>
+                    HTML;
                 }
 
                 $content .= <<<HTML
@@ -149,13 +163,11 @@ class OrdersTemplate extends BaseTemplate
                                                 </div>
                                             </div>
                                             <div class="card-footer bg-light">
-                                                <a href="/orders/view/{$index}" class="btn btn-outline-primary btn-sm">
-                                                    <i class="bi bi-eye me-1"></i>Подробнее
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
-                    HTML;
+                HTML;
             }
 
             $content .= '</div>';
@@ -176,5 +188,35 @@ class OrdersTemplate extends BaseTemplate
     public static function getOrderDetailTemplate(array $user, array $order, int $orderId): string
     {
         return self::getOrdersTemplate($user, [$order]);
+    }
+
+    /**
+     * Шаблон ошибки
+     */
+    public static function getErrorTemplate(string $message): string
+    {
+        $content = <<<HTML
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow-lg border-danger">
+                            <div class="card-header bg-danger text-white">
+                                <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ошибка</h4>
+                            </div>
+                            <div class="card-body text-center py-5">
+                                <i class="bi bi-x-circle display-1 text-danger mb-3"></i>
+                                <p class="lead">{$message}</p>
+                                <div class="mt-4">
+                                    <a href="/orders" class="btn btn-primary">
+                                        <i class="bi bi-box me-2"></i>К моим заказам
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            HTML;
+        return parent::getTemplate($content);
     }
 }

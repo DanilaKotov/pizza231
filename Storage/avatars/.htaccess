@@ -1,0 +1,3 @@
+# Разрешить доступ к файлам аватарок
+Options -Indexes
+Require all granted

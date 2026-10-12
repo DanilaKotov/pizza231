@@ -19,7 +19,8 @@
         "phpunit/phpunit": "^11.5",
         "nunomaduro/phpinsights": "^2.13",
         "friendsofphp/php-cs-fixer": "^3.94",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "phpmetrics/phpmetrics": "^2.9"
     },
     "config": {
         "allow-plugins": {
